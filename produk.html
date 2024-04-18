@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* Reset default browser styles */
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    nav ul {
+        list-style-type: none;
+    }
+    
+    nav ul li {
+        display: inline;
+        margin-right: 20px;
+    }
+    
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    #form-barang,
+    #daftar-barang {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    #form-input label,
+    #form-input input,
+    #form-input button {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    #form-input input,
+    #form-input button {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    
+    #form-input button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    
+    #form-input button:hover {
+        background-color: #444;
+    }
+    
+    #daftar-barang ul {
+        padding: 0;
+    }
+    
+    #daftar-barang li {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+    }
+</style>
+
+<body>
+    <header>
+        <h1>Aplikasi Kasir XYZ</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Beranda</a></li>
+                <li><a href="#">Data Barang</a></li>
+                <li><a href="#">Transaksi</a></li>
+                <li><a href="#">Laporan</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="form-barang">
+        <h2>Form Pendataan Barang</h2>
+        <form id="form-input">
+            <label for="nama">Nama Barang:</label>
+            <input type="text" id="nama" name="nama" required><br>
+
+            <label for="harga">Harga Barang:</label>
+            <input type="number" id="harga" name="harga" min="0" required><br>
+
+            <label for="stok">Stok Barang:</label>
+            <input type="number" id="stok" name="stok" min="0" required><br>
+
+            <button type="submit">Tambah Barang</button>
+        </form>
+    </section>
+    <section id="daftar-barang">
+        <h2>Daftar Barang</h2>
+        <ul id="list-barang">
+            <!-- Daftar barang akan ditampilkan di sini -->
+        </ul>
+    </section>
+
+</body>
+<script>
+    // Simulasi data barang
+    let dataBarang = [];
+
+    // Ambil form input
+    const formInput = document.getElementById('form-input');
+
+    // Tambahkan event listener untuk submit form
+    formInput.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nama = document.getElementById('nama').value;
+        const harga = parseFloat(document.getElementById('harga').value);
+        const stok = parseInt(document.getElementById('stok').value);
+
+        // Validasi input
+        if (nama.trim() === '' || isNaN(harga) || isNaN(stok) || harga <= 0 || stok <= 0) {
+            alert('Mohon isi semua kolom dengan benar.');
+            return;
+        }
+
+        // Buat objek barang
+        const barang = {
+            nama,
+            harga,
+            stok
+        };
+
+        // Tambahkan barang ke dalam data
+        dataBarang.push(barang);
+
+        // Tampilkan ulang daftar barang
+        tampilkanDaftarBarang();
+
+        // Reset form input
+        formInput.reset();
+    });
+
+    // Fungsi untuk menampilkan daftar barang
+    function tampilkanDaftarBarang() {
+        const listBarang = document.getElementById('list-barang');
+        listBarang.innerHTML = ''; // Kosongkan list terlebih dahulu
+
+        dataBarang.forEach(barang => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${barang.nama} - Harga: Rp${barang.harga} - Stok: ${barang.stok}`;
+            listBarang.appendChild(listItem);
+        });
+    }
+</script>
+
+</html>

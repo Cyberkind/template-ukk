@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Barang</title>
+    <style>
+        /* CSS untuk styling */
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .form-container {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stok Barang</h1>
+        <!-- Filter dan Pencarian -->
+        <div class="form-container">
+            <label for="kategori">Filter Kategori:</label>
+            <select id="kategori">
+            <option value="semua">Semua</option>
+            <option value="elektronik">Elektronik</option>
+            <option value="pakaian">Pakaian</option>
+            <option value="alatrumah">Alat Rumah Tangga</option>
+        </select>
+            <input type="text" id="search" placeholder="Cari barang...">
+            <button onclick="cariBarang()">Cari</button>
+        </div>
+        <!-- Tabel Stok Barang -->
+        <table id="tabelBarang">
+            <thead>
+                <tr>
+                    <th>Nama Barang</th>
+                    <th>Kategori</th>
+                    <th>Harga Jual</th>
+                    <th>Harga Beli</th>
+                    <th>Stok Tersedia</th>
+                    <th>Tindakan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data barang ditampilkan di sini -->
+            </tbody>
+        </table>
+        <!-- Form Tambah Barang -->
+        <div class="form-container">
+            <h2>Tambah Barang Baru</h2>
+            <label for="nama">Nama Barang:</label>
+            <input type="text" id="nama">
+            <label for="kategoriBaru">Kategori:</label>
+            <input type="text" id="kategoriBaru">
+            <label for="hargaJual">Harga Jual:</label>
+            <input type="text" id="hargaJual">
+            <label for="hargaBeli">Harga Beli:</label>
+            <input type="text" id="hargaBeli">
+            <label for="stokAwal">Stok Awal:</label>
+            <input type="text" id="stokAwal">
+            <button onclick="tambahBarang()">Tambah</button>
+        </div>
+    </div>
+    <script>
+        // Data barang (contoh, bisa diambil dari database)
+        let dataBarang = [{
+            id: 1,
+            nama: 'Laptop',
+            kategori: 'Elektronik',
+            hargaJual: 8000000,
+            hargaBeli: 6000000,
+            stok: 10
+        }, {
+            id: 2,
+            nama: 'Kemeja',
+            kategori: 'Pakaian',
+            hargaJual: 200000,
+            hargaBeli: 150000,
+            stok: 20
+        }, {
+            id: 3,
+            nama: 'Panci',
+            kategori: 'Alat Rumah Tangga',
+            hargaJual: 300000,
+            hargaBeli: 200000,
+            stok: 15
+        }];
+
+        // Fungsi untuk menampilkan data barang di tabel
+        function tampilkanDataBarang() {
+            const tabel = document.getElementById('tabelBarang');
+            const tbody = tabel.getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan isi tabel
+
+            dataBarang.forEach(barang => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>${barang.nama}</td>
+                <td>${barang.kategori}</td>
+                <td>${barang.hargaJual}</td>
+                <td>${barang.hargaBeli}</td>
+                <td>${barang.stok}</td>
+                <td><button onclick="editBarang(${barang.id})">Edit</button> <button onclick="hapusBarang(${barang.id})">Hapus</button></td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Fungsi untuk mencari barang berdasarkan kategori
+        function cariBarang() {
+            const kataKunci = document.getElementById('search').value.toLowerCase();
+            const kategori = document.getElementById('kategori').value.toLowerCase();
+            const hasilFilter = dataBarang.filter(barang => {
+                return (barang.nama.toLowerCase().includes(kataKunci) || kataKunci === '') && (barang.kategori.toLowerCase() === kategori || kategori === 'semua');
+            });
+            dataBarang = hasilFilter;
+            tampilkanDataBarang();
+        }
+
+        // Fungsi untuk menambahkan barang baru
+        function tambahBarang() {
+            const nama = document.getElementById('nama').value;
+            const kategori = document.getElementById('kategoriBaru').value;
+            const hargaJual = parseFloat(document.getElementById('hargaJual').value);
+            const hargaBeli = parseFloat(document.getElementById('hargaBeli').value);
+            const stokAwal = parseInt(document.getElementById('stokAwal').value);
+
+            const barangBaru = {
+                id: dataBarang.length + 1,
+                nama: nama,
+                kategori: kategori,
+                hargaJual: hargaJual,
+                hargaBeli: hargaBeli,
+                stok: stokAwal
+            };
+
+            dataBarang.push(barangBaru);
+            tampilkanDataBarang();
+            resetForm();
+        }
+
+        // Fungsi untuk reset form setelah tambah barang
+        function resetForm() {
+            document.getElementById('nama').value = '';
+            document.getElementById('kategoriBaru').value = '';
+            document.getElementById('hargaJual').value = '';
+            document.getElementById('hargaBeli').value = '';
+            document.getElementById('stokAwal').value = '';
+        }
+
+        // Panggil fungsi untuk menampilkan data barang pertama kali
+        tampilkanDataBarang();
+    </script>
+</body>
+
+</html>
